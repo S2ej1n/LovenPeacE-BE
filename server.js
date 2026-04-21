@@ -23,10 +23,10 @@ app.get("/", (_req, res) => {
 });
 
 // 폼 오픈 여부 확인 API
-// const OPEN_TIME = new Date("2026-04-28T05:00:00.000Z"); 
+const OPEN_TIME = new Date("2026-04-28T05:00:00.000Z"); 
 // 한국시간 2026-04-28 14:00 (UTC+9)
 
-const OPEN_TIME = new Date("2026-04-21T15:45:00.000Z");
+// const OPEN_TIME = new Date("2026-04-21T15:45:00.000Z");
 
 app.get("/status", (_req, res) => {
   const now = new Date();
@@ -58,6 +58,11 @@ db.connect((err) => {
 // 폼 저장 API
 app.post("/applications", (req, res) => {
   const { teamName, leader, phone, members, genre, privacy } = req.body;
+
+  // 방어 코드 - 접수기간 아님
+  if (new Date() < OPEN_TIME) {
+    return res.status(403).json({ error: "아직 접수 기간이 아닙니다." });
+  }
 
   // 값 체크 - 서버에서 간단한 방어 코드
   if (!teamName || !leader || !phone || !members || !genre || !privacy) {
