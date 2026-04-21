@@ -18,10 +18,26 @@ app.use(express.json());
 // });
 
 // 서버 살아잇는지 확인용
-app.get("/", (req, res) => {
+app.get("/", (_req, res) => {
   res.send("Server is running");
 });
 
+// 폼 오픈 여부 확인 API
+// const OPEN_TIME = new Date("2026-04-28T05:00:00.000Z"); 
+// 한국시간 2026-04-28 14:00 (UTC+9)
+
+const OPEN_TIME = new Date("2026-04-21T15:22:00.000Z");
+
+app.get("/status", (_req, res) => {
+  const now = new Date();
+  res.json({
+    isOpen: now >= OPEN_TIME,
+    serverTime: now.toISOString(),
+    openTime: OPEN_TIME.toISOString(),
+  });
+});
+
+console.log("HOST:", process.env.MYSQLHOST);
 
 const db = mysql.createConnection({
   host: process.env.MYSQLHOST,
