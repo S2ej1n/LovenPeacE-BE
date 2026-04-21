@@ -17,6 +17,12 @@ app.use(express.json());
 //   database: process.env.DB_NAME
 // });
 
+// 서버 살아잇는지 확인용
+app.get("/", (req, res) => {
+  res.send("Server is running");
+});
+
+
 const db = mysql.createConnection({
   host: process.env.MYSQLHOST,
   user: process.env.MYSQLUSER,
