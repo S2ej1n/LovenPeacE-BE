@@ -23,10 +23,10 @@ app.get("/", (_req, res) => {
 });
 
 // 폼 오픈 여부 확인 API
-// const OPEN_TIME = new Date("2026-04-28T05:00:00.000Z"); 
+const OPEN_TIME = new Date("2026-04-28T05:00:00.000Z"); 
 // 한국시간 2026-04-28 14:00 (UTC+9)
 
-const OPEN_TIME = new Date("2026-04-21T15:22:00.000Z");
+// const OPEN_TIME = new Date("2026-04-21T15:22:00.000Z");
 
 app.get("/status", (_req, res) => {
   const now = new Date();
