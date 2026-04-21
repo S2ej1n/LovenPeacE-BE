@@ -10,11 +10,19 @@ app.use(cors());
 app.use(express.json());
 
 // MySQL 연결
+// const db = mysql.createConnection({
+//   host: process.env.DB_HOST,
+//   user: process.env.DB_USER,
+//   password: process.env.DB_PASSWORD,
+//   database: process.env.DB_NAME
+// });
+
 const db = mysql.createConnection({
-  host: process.env.DB_HOST,
-  user: process.env.DB_USER,
-  password: process.env.DB_PASSWORD,
-  database: process.env.DB_NAME
+  host: process.env.MYSQLHOST,
+  user: process.env.MYSQLUSER,
+  password: process.env.MYSQLPASSWORD,
+  database: process.env.MYSQLDATABASE,
+  port: process.env.MYSQLPORT
 });
 
 db.connect((err) => {
@@ -28,6 +36,11 @@ db.connect((err) => {
 // 폼 저장 API
 app.post("/applications", (req, res) => {
   const { teamName, leader, phone, members, genre, privacy } = req.body;
+
+  // 값 체크 - 서버에서 간단한 방어 코드
+  if (!teamName || !leader || !phone || !members || !genre || !privacy) {
+    return res.status(400).json({ error: "필수 값 누락" });
+  }
 
   const sql = `
     INSERT INTO applications
@@ -45,6 +58,9 @@ app.post("/applications", (req, res) => {
   });
 });
 
-app.listen(3001, () => {
-  console.log("Server running on http://localhost:3001");
+// 서버 실행 (Railway 필수 설정)
+const PORT = process.env.PORT || 3001;
+
+app.listen(PORT, () => {
+  console.log(`🚀 Server running on port ${PORT}`);
 });
