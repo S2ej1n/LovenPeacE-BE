@@ -4,9 +4,22 @@ const express = require("express");
 const mysql = require("mysql2");
 const cors = require("cors");
 
+const rateLimit = require("express-rate-limit");
+
 const app = express();
 
-app.use(cors());
+const limiter = rateLimit({
+  windowMs: 10 * 60 * 1000, // 10분
+  max: 3, // IP당 최대 3회
+  message: { error: "너무 많은 요청입니다. 잠시 후 다시 시도해주세요." },
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+
+app.use(cors({
+  origin: "https://lovenpeace.vercel.app",
+  methods: ["GET", "POST"],
+}));
 app.use(express.json());
 
 // MySQL 연결
@@ -56,7 +69,7 @@ db.connect((err) => {
 });
 
 // 폼 저장 API
-app.post("/applications", (req, res) => {
+app.post("/applications", limiter, (req, res) => {
   const { teamName, leader, phone, members, genre, privacy } = req.body;
 
   // 방어 코드 - 접수기간 아님
